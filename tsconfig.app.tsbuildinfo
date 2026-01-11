@@ -1,0 +1,1 @@
+{"root":["./src/app.tsx","./src/main.tsx","./src/types.ts","./src/components/carddashboard.tsx","./src/components/cardeditor.tsx","./src/components/moderncard.tsx","./src/utils/api.ts","./src/utils/csvparser.ts","./src/utils/generatewordpresscode.ts"],"version":"5.9.3"}
