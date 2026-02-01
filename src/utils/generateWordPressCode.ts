@@ -332,19 +332,19 @@ export const generateWordPressCode = (data: ProductData): { html: string; css: s
 `;
 
   // Generazione Contenuti Dinamici
-  const publisherHtml = data.publisherUrl 
-    ? `<a href="${data.publisherUrl}" target="_blank" rel="noopener">${data.publisher}</a>` 
+  const publisherHtml = data.publisherUrl
+    ? `<a href="${data.publisherUrl}" target="_blank" rel="noopener">${data.publisher}</a>`
     : data.publisher;
-  
+
   const primaryUrl = data.links[0]?.url || '#';
   const titleHref = data.titleUrl || primaryUrl;
   const imageHref = data.imageClickUrl || primaryUrl;
 
   // Per i libri, prodotti didattici e semplici mostriamo solo il link primario (Acquista)
   const linksToRender = (isBook || isProduct || isSimple)
-    ? data.links.filter(l => l.type === 'primary') 
+    ? data.links.filter(l => l.type === 'primary')
     : data.links;
-    
+
   // Tag Lists
   const tagsListHtml = isComic && data.tags.length > 0 ? `
     <div class="wp-comic-card__tags">
@@ -365,8 +365,7 @@ export const generateWordPressCode = (data: ProductData): { html: string; css: s
   ` : '';
 
   // Use cardTitle for display, not internal title
-  // Handle description line breaks with <br />
-  const descriptionHtml = (data.description || '').replace(/\n/g, '<br />');
+
 
   const html = `
 <!-- WP Card: ${isBook ? 'Libro' : isProduct ? 'Prodotto Didattico' : isSimple ? 'Prodotto Semplice' : 'Fumetto'} - ${data.title} -->
@@ -395,10 +394,11 @@ export const generateWordPressCode = (data: ProductData): { html: string; css: s
     </div>
     ` : ''}
     
-    <div class="${rootClass}__description">
-      <p>${descriptionHtml}</p>
+    <!-- Description -->
+    <div class="${rootClass}__description wp-description-content">
+        ${data.description}
     </div>
-
+    
     ${isBook && data.whyRead ? `
     <div class="wp-book-card__why-read">
       <span class="wp-book-card__why-read-title">Perché leggere questo libro?</span>

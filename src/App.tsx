@@ -63,10 +63,10 @@ const App: React.FC = () => {
             {/* Plugin Header */}
             <div className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm px-6 py-3 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                   <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">B</div>
-                   <span className="font-semibold text-gray-700">bSmart Card Designer</span>
+                    <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">B</div>
+                    <span className="font-semibold text-gray-700">bSmart Card Designer</span>
                 </div>
-                <div className="text-xs text-gray-400 font-mono">v1.0.7</div>
+                <div className="text-xs text-gray-400 font-mono">v1.1.0</div>
             </div>
 
             {loading && (
@@ -77,7 +77,7 @@ const App: React.FC = () => {
 
             <div className="pt-8 w-full">
                 {view === 'dashboard' && (
-                    <CardDashboard 
+                    <CardDashboard
                         cards={cards}
                         onCreateNew={handleCreateNew}
                         onEdit={handleEdit}
@@ -86,7 +86,7 @@ const App: React.FC = () => {
                 )}
 
                 {view === 'editor' && (
-                    <CardEditor 
+                    <CardEditor
                         initialData={editingCard?.data}
                         onSave={handleSave}
                         onCancel={handleCancel}

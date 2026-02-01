@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 import { ProductData, CardVariant, ProductLink } from '../types';
 import ModernCard from './ModernCard';
 import { ArrowLeft, Save, MessageSquare, Book, Package, ShoppingBag, Eye } from 'lucide-react';
@@ -10,33 +12,33 @@ interface Props {
 }
 
 const EMPTY_DATA: ProductData = {
-  title: "", // Internal WP Title
-  cardTitle: "", // Display Title
-  titleUrl: "",
-  coverImage: "",
-  imageClickUrl: "",
-  description: "",
-  subject: "",
-  publisher: "",
-  publisherUrl: "",
-  author: "",
-  whyRead: "",
-  brand: "",
-  educationalObjectives: [],
-  tags: [],
-  links: []
+    title: "", // Internal WP Title
+    cardTitle: "", // Display Title
+    titleUrl: "",
+    coverImage: "",
+    imageClickUrl: "",
+    description: "",
+    subject: "",
+    publisher: "",
+    publisherUrl: "",
+    author: "",
+    whyRead: "",
+    brand: "",
+    educationalObjectives: [],
+    tags: [],
+    links: []
 };
 
 const CardEditor: React.FC<Props> = ({ initialData, onSave, onCancel }) => {
     // Init form data
     const [formData, setFormData] = useState<ProductData>(
-        initialData 
-        ? { ...initialData } 
-        : { ...EMPTY_DATA, cardVariant: 'comic' }
+        initialData
+            ? { ...initialData }
+            : { ...EMPTY_DATA, cardVariant: 'comic' }
     );
-    
+
     const [variant, setVariant] = useState<CardVariant>(initialData?.cardVariant || 'comic');
-    
+
     // Helper states for array/complex inputs
     const [rawTags, setRawTags] = useState(initialData?.tags?.join(', ') || "");
     const [rawObjectives, setRawObjectives] = useState(initialData?.educationalObjectives?.join(', ') || "");
@@ -83,8 +85,8 @@ const CardEditor: React.FC<Props> = ({ initialData, onSave, onCancel }) => {
             return;
         }
         if (!formData.cardTitle.trim()) {
-             alert("Inserisci il 'Titolo Card' nel form che sarà visibile nell'anteprima.");
-             return;
+            alert("Inserisci il 'Titolo Card' nel form che sarà visibile nell'anteprima.");
+            return;
         }
         onSave(formData);
     };
@@ -94,7 +96,7 @@ const CardEditor: React.FC<Props> = ({ initialData, onSave, onCancel }) => {
             {/* Header Toolbar */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-4 rounded-xl border border-gray-200 shadow-sm sticky top-20 z-20">
                 <div className="flex items-center gap-4">
-                    <button 
+                    <button
                         onClick={onCancel}
                         className="p-2 hover:bg-gray-100 rounded-full text-gray-500 transition-colors"
                         title="Torna alla lista"
@@ -107,17 +109,17 @@ const CardEditor: React.FC<Props> = ({ initialData, onSave, onCancel }) => {
                         </h2>
                     </div>
                 </div>
-                
+
                 <div className="flex items-center gap-3 w-full md:w-auto overflow-x-auto">
                     {/* Variant Selector */}
-                     <div className="flex bg-gray-100 p-1 rounded-lg mr-2">
-                        <button onClick={() => setVariant('comic')} title="Fumetto" className={`flex items-center gap-2 px-3 py-1.5 text-sm font-bold rounded transition-all ${variant === 'comic' ? 'bg-white shadow text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}><MessageSquare size={16}/> <span className="hidden xl:inline">Fumetto</span></button>
-                        <button onClick={() => setVariant('book')} title="Libro" className={`flex items-center gap-2 px-3 py-1.5 text-sm font-bold rounded transition-all ${variant === 'book' ? 'bg-white shadow text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}><Book size={16}/> <span className="hidden xl:inline">Libro</span></button>
-                        <button onClick={() => setVariant('product')} title="Didattica" className={`flex items-center gap-2 px-3 py-1.5 text-sm font-bold rounded transition-all ${variant === 'product' ? 'bg-white shadow text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}><Package size={16}/> <span className="hidden xl:inline">Didattica</span></button>
-                        <button onClick={() => setVariant('simple')} title="Semplice" className={`flex items-center gap-2 px-3 py-1.5 text-sm font-bold rounded transition-all ${variant === 'simple' ? 'bg-white shadow text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}><ShoppingBag size={16}/> <span className="hidden xl:inline">Semplice</span></button>
+                    <div className="flex bg-gray-100 p-1 rounded-lg mr-2">
+                        <button onClick={() => setVariant('comic')} title="Fumetto" className={`flex items-center gap-2 px-3 py-1.5 text-sm font-bold rounded transition-all ${variant === 'comic' ? 'bg-white shadow text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}><MessageSquare size={16} /> <span className="hidden xl:inline">Fumetto</span></button>
+                        <button onClick={() => setVariant('book')} title="Libro" className={`flex items-center gap-2 px-3 py-1.5 text-sm font-bold rounded transition-all ${variant === 'book' ? 'bg-white shadow text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}><Book size={16} /> <span className="hidden xl:inline">Libro</span></button>
+                        <button onClick={() => setVariant('product')} title="Didattica" className={`flex items-center gap-2 px-3 py-1.5 text-sm font-bold rounded transition-all ${variant === 'product' ? 'bg-white shadow text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}><Package size={16} /> <span className="hidden xl:inline">Didattica</span></button>
+                        <button onClick={() => setVariant('simple')} title="Semplice" className={`flex items-center gap-2 px-3 py-1.5 text-sm font-bold rounded transition-all ${variant === 'simple' ? 'bg-white shadow text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}><ShoppingBag size={16} /> <span className="hidden xl:inline">Semplice</span></button>
                     </div>
 
-                    <button 
+                    <button
                         onClick={handleSubmit}
                         className="flex-1 md:flex-none bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg font-bold shadow-sm flex items-center justify-center gap-2 transition-all whitespace-nowrap"
                     >
@@ -128,14 +130,14 @@ const CardEditor: React.FC<Props> = ({ initialData, onSave, onCancel }) => {
             </div>
 
             <div className="grid lg:grid-cols-12 gap-8 items-start">
-                
+
                 {/* FORM COLUMN (Left) */}
                 <div className="lg:col-span-5 space-y-6 animate-in slide-in-from-left-4 duration-500">
-                     {/* Internal Name Section */}
-                     <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-blue-500">
+                    {/* Internal Name Section */}
+                    <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm border-l-4 border-l-blue-500">
                         <label className="block text-xs font-bold text-gray-500 uppercase mb-1">Nome Gestione Interna</label>
-                        <input 
-                            type="text" 
+                        <input
+                            type="text"
                             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none font-medium text-lg placeholder:font-normal"
                             placeholder="Es. Promo Ottobre - Promessi Sposi"
                             value={internalTitle}
@@ -143,16 +145,16 @@ const CardEditor: React.FC<Props> = ({ initialData, onSave, onCancel }) => {
                             autoFocus={!initialData}
                         />
                         <p className="text-xs text-gray-400 mt-1">Questo nome serve solo a te per ritrovare la card nella dashboard.</p>
-                     </div>
+                    </div>
 
                     <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm space-y-4">
-                         <h3 className="font-bold text-gray-900 border-b border-gray-100 pb-2 mb-4">Dati Contenuto</h3>
-                         
-                         {/* Common Fields */}
-                         <div>
+                        <h3 className="font-bold text-gray-900 border-b border-gray-100 pb-2 mb-4">Dati Contenuto</h3>
+
+                        {/* Common Fields */}
+                        <div>
                             <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Titolo Card (Visibile)</label>
-                            <input 
-                                type="text" 
+                            <input
+                                type="text"
                                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
                                 placeholder="Titolo del prodotto..."
                                 value={formData.cardTitle}
@@ -164,13 +166,13 @@ const CardEditor: React.FC<Props> = ({ initialData, onSave, onCancel }) => {
                         {variant === 'comic' && (
                             <div>
                                 <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Materia</label>
-                                <input 
-                                    type="text" 
+                                <input
+                                    type="text"
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
                                     placeholder="Es. Storia"
                                     value={formData.subject}
                                     onChange={(e) => handleChange('subject', e.target.value)}
-                                    />
+                                />
                             </div>
                         )}
 
@@ -178,8 +180,8 @@ const CardEditor: React.FC<Props> = ({ initialData, onSave, onCancel }) => {
                         {variant === 'book' && (
                             <div>
                                 <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Autore</label>
-                                <input 
-                                    type="text" 
+                                <input
+                                    type="text"
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
                                     placeholder="Es. Alessandro Manzoni"
                                     value={formData.author || ''}
@@ -188,12 +190,12 @@ const CardEditor: React.FC<Props> = ({ initialData, onSave, onCancel }) => {
                             </div>
                         )}
 
-                         {/* Brand */}
-                         {(variant === 'product' && (
+                        {/* Brand */}
+                        {(variant === 'product' && (
                             <div>
                                 <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Marca / Produttore</label>
-                                <input 
-                                    type="text" 
+                                <input
+                                    type="text"
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
                                     placeholder="Es. Learning Resources"
                                     value={formData.brand || ''}
@@ -206,8 +208,8 @@ const CardEditor: React.FC<Props> = ({ initialData, onSave, onCancel }) => {
                         {(variant === 'simple' && (
                             <div>
                                 <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Marca / Produttore</label>
-                                <input 
-                                    type="text" 
+                                <input
+                                    type="text"
                                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
                                     placeholder="Es. Seven"
                                     value={formData.brand || ''}
@@ -216,13 +218,13 @@ const CardEditor: React.FC<Props> = ({ initialData, onSave, onCancel }) => {
                             </div>
                         ))}
 
-                         {/* Publisher (Not for simple/product) */}
-                         {(variant === 'comic' || variant === 'book') && (
-                             <div className="grid grid-cols-2 gap-4">
+                        {/* Publisher (Not for simple/product) */}
+                        {(variant === 'comic' || variant === 'book') && (
+                            <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Editore</label>
-                                    <input 
-                                        type="text" 
+                                    <input
+                                        type="text"
                                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
                                         placeholder="Es. De Agostini"
                                         value={formData.publisher}
@@ -231,22 +233,22 @@ const CardEditor: React.FC<Props> = ({ initialData, onSave, onCancel }) => {
                                 </div>
                                 <div>
                                     <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Link Editore</label>
-                                    <input 
-                                        type="text" 
+                                    <input
+                                        type="text"
                                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm font-mono"
                                         placeholder="https://..."
                                         value={formData.publisherUrl || ''}
                                         onChange={(e) => handleChange('publisherUrl', e.target.value)}
                                     />
                                 </div>
-                             </div>
-                         )}
+                            </div>
+                        )}
 
-                         {/* Images */}
-                         <div>
+                        {/* Images */}
+                        <div>
                             <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">URL Immagine Copertina</label>
-                            <input 
-                                type="text" 
+                            <input
+                                type="text"
                                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm font-mono"
                                 placeholder="https://... (jpg/png)"
                                 value={formData.coverImage}
@@ -254,10 +256,10 @@ const CardEditor: React.FC<Props> = ({ initialData, onSave, onCancel }) => {
                             />
                         </div>
 
-                         <div>
+                        <div>
                             <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Link al click su Immagine (Opzionale)</label>
-                            <input 
-                                type="text" 
+                            <input
+                                type="text"
                                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm font-mono"
                                 placeholder="Se vuoto, usa Link Acquista"
                                 value={formData.imageClickUrl || ''}
@@ -265,10 +267,10 @@ const CardEditor: React.FC<Props> = ({ initialData, onSave, onCancel }) => {
                             />
                         </div>
 
-                         <div>
+                        <div>
                             <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Link Titolo (Opzionale)</label>
-                            <input 
-                                type="text" 
+                            <input
+                                type="text"
                                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm font-mono"
                                 placeholder="Se vuoto, usa Link Acquista"
                                 value={formData.titleUrl || ''}
@@ -279,19 +281,28 @@ const CardEditor: React.FC<Props> = ({ initialData, onSave, onCancel }) => {
                         {/* Description */}
                         <div>
                             <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Descrizione</label>
-                            <textarea 
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none h-32"
-                                placeholder="Scrivi una breve descrizione..."
-                                value={formData.description}
-                                onChange={(e) => handleChange('description', e.target.value)}
-                            />
+                            <div className="bg-white">
+                                <ReactQuill
+                                    theme="snow"
+                                    value={formData.description}
+                                    onChange={(val) => handleChange('description', val)}
+                                    modules={{
+                                        toolbar: [
+                                            ['bold', 'italic'],
+                                            [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+                                            ['link']
+                                        ]
+                                    }}
+                                    className="h-40 mb-12" // mb-12 to account for toolbar height in flow
+                                />
+                            </div>
                         </div>
 
-                         {/* Why Read (Book) */}
-                         {variant === 'book' && (
+                        {/* Why Read (Book) */}
+                        {variant === 'book' && (
                             <div>
                                 <label className="block text-xs font-semibold text-blue-600 uppercase mb-1">Perché leggere (box blu)</label>
-                                <textarea 
+                                <textarea
                                     className="w-full px-3 py-2 border border-blue-100 bg-blue-50/30 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none h-24"
                                     placeholder="Motivi chiave..."
                                     value={formData.whyRead || ''}
@@ -299,7 +310,7 @@ const CardEditor: React.FC<Props> = ({ initialData, onSave, onCancel }) => {
                                 />
                             </div>
                         )}
-                        
+
                         {/* Tags / Objectives */}
                         {variant === 'comic' && (
                             <div>
@@ -314,8 +325,8 @@ const CardEditor: React.FC<Props> = ({ initialData, onSave, onCancel }) => {
                             </div>
                         )}
 
-                         {/* Links */}
-                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-gray-100">
+                        {/* Links */}
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-gray-100">
                             <div>
                                 <label className="block text-xs font-semibold text-blue-600 uppercase mb-1">Link "Acquista"</label>
                                 <input type="text" className="w-full px-3 py-2 border border-blue-100 bg-blue-50/30 rounded-lg outline-none text-sm font-mono" value={buyLink} onChange={e => setBuyLink(e.target.value)} placeholder="https://store..." />
@@ -326,7 +337,7 @@ const CardEditor: React.FC<Props> = ({ initialData, onSave, onCancel }) => {
                                     <input type="text" className="w-full px-3 py-2 border border-gray-300 rounded-lg outline-none text-sm font-mono" value={previewLink} onChange={e => setPreviewLink(e.target.value)} placeholder="https://books..." />
                                 </div>
                             )}
-                         </div>
+                        </div>
                     </div>
                 </div>
 
@@ -334,10 +345,10 @@ const CardEditor: React.FC<Props> = ({ initialData, onSave, onCancel }) => {
                 <div className="lg:col-span-7 sticky top-40 animate-in slide-in-from-right-4 duration-500">
                     <div className="bg-gray-100/80 p-4 md:p-8 rounded-2xl border border-dashed border-gray-300">
                         <div className="flex items-center justify-center mb-6 gap-2">
-                            <Eye size={16} className="text-gray-400"/>
+                            <Eye size={16} className="text-gray-400" />
                             <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Anteprima In Tempo Reale</span>
                         </div>
-                        
+
                         {/* Preview Render */}
                         <ModernCard data={formData} />
 

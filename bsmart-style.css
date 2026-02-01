@@ -161,6 +161,48 @@
   margin-bottom: 1.5rem;
 }
 
+/* --- Rich Text Content Styles --- */
+.wp-description-content p {
+  margin-bottom: 0.8rem;
+}
+
+.wp-description-content ul, 
+.wp-description-content ol {
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.wp-description-content ul {
+  list-style-type: disc;
+}
+
+.wp-description-content ol {
+  list-style-type: decimal;
+}
+
+.wp-description-content li {
+  margin-bottom: 0.3rem;
+}
+
+.wp-description-content strong {
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.wp-description-content em {
+  font-style: italic;
+}
+
+.wp-description-content a {
+  color: #2563eb;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.wp-description-content a:hover {
+  color: #1d4ed8;
+}
+
 /* --- Elementi Specifici FUMETTO --- */
 .wp-comic-card__subject-badge {
   display: inline-block;
