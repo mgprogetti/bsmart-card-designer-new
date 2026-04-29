@@ -1,41 +1,69 @@
 {
   "version": "1.0",
-  "timestamp": "2026-04-29T09:30:00Z",
+  "timestamp": "2026-04-29T20:07:13+0200",
   "phase": null,
   "phase_name": null,
   "phase_dir": null,
   "plan": null,
-  "task": null,
+  "task": 1,
   "total_tasks": 1,
-  "status": "completed",
+  "status": "paused",
   "completed_tasks": [
     {
       "id": 1,
-      "name": "Create CLAUDE.md with project overview and development guidance",
-      "status": "done",
-      "commit": null
+      "name": "Promo card maintenance pass through v1.2.10",
+      "status": "in_progress",
+      "progress": "Implemented and build-verified multiple Promo fixes and docs/version updates; final ZIP/commit decision pending."
     }
   ],
-  "remaining_tasks": [],
+  "remaining_tasks": [
+    {
+      "id": 1,
+      "name": "Create final v1.2.10 ZIP if needed and push WIP pause commit if remote continuity is required",
+      "status": "not_started"
+    }
+  ],
   "blockers": [],
   "human_actions_pending": [
     {
-      "action": "Review and commit the CLAUDE.md file",
-      "context": "The file was created but not yet committed to git",
+      "action": "Install/test v1.2.10 in WordPress or request ZIP export",
+      "context": "The latest source is build-verified but no bsmart-card-designer-1.2.10.zip has been exported yet.",
       "blocking": false
     }
   ],
   "decisions": [
     {
-      "decision": "Created comprehensive CLAUDE.md with project architecture, build commands, and development patterns",
-      "rationale": "Provides future Claude Code instances with complete context to work productively in this React + WordPress plugin project",
+      "decision": "Keep AGENTS.md out of commits unless explicitly requested",
+      "rationale": "It only contains auto-updated agent context/timestamp and is not needed by WordPress, npm, Vite, or the installable ZIP.",
+      "phase": null
+    },
+    {
+      "decision": "Always bump all project version surfaces for functional fixes",
+      "rationale": "The user explicitly requested that plugin, enqueue versions, package files, visible UI label, changelog, and ZIP naming stay aligned.",
+      "phase": null
+    },
+    {
+      "decision": "Fix rich text spacing in CSS instead of rewriting saved descriptions",
+      "rationale": "Existing Quill HTML uses paragraph tags and empty paragraphs; CSS normalization preserves stored content while correcting published rendering.",
       "phase": null
     }
   ],
   "uncommitted_files": [
+    "CHANGELOG.md",
     "CLAUDE.md",
-    ".claude/"
+    "README.md",
+    "bsmart-card-designer.php",
+    "bsmart-style.css",
+    "package-lock.json",
+    "package.json",
+    "src/App.tsx",
+    "src/components/CardDashboard.tsx",
+    "src/components/CardEditor.tsx",
+    "src/components/ModernCard.tsx",
+    "src/utils/generateWordPressCode.ts",
+    ".planning/HANDOFF.json",
+    ".planning/.continue-here.md"
   ],
-  "next_action": "Commit CLAUDE.md with git, then repository setup is complete",
-  "context_notes": "Simple one-off task: analyzed React + WordPress plugin architecture and documented it for future development. No active development phase or spike."
+  "next_action": "Inspect git status, decide whether to export bsmart-card-designer-1.2.10.zip, then decide whether to push the WIP pause commit.",
+  "context_notes": "No formal GSD phase exists. The repo is on main aligned with origin/main before this pause commit. npm run build passed for v1.2.10 after the latest Quill empty paragraph spacing fix."
 }

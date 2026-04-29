@@ -12,6 +12,7 @@ interface Props {
 }
 
 const formatPrice = (value: number): string => value.toFixed(2).replace('.', ',');
+const hasPrice = (value: number | undefined | null): value is number => value !== undefined && value !== null;
 
 const EMPTY_DATA: ProductData = {
     title: "", // Internal WP Title
@@ -376,7 +377,7 @@ const CardEditor: React.FC<Props> = ({ initialData, onSave, onCancel }) => {
                                 </div>
 
                                 {/* Risparmio calcolato (sola lettura) */}
-                                {formData.originalPrice && formData.promoPrice &&
+                                {hasPrice(formData.originalPrice) && hasPrice(formData.promoPrice) &&
                                 formData.promoPrice < formData.originalPrice && (
                                     <p className="inline-flex rounded px-2 py-0.5 text-sm text-[#C73E23] font-semibold bg-gradient-to-r from-[#FFF2ED] to-[#FFE0D6]">
                                         Risparmi € {formatPrice(formData.originalPrice - formData.promoPrice)}

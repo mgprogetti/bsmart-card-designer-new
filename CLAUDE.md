@@ -6,7 +6,7 @@ Guida rapida per lavorare in questo repository senza caricare contesto non neces
 
 `bSmart Card Designer` è un plugin WordPress con admin React/TypeScript. Serve a creare card prodotto salvate in WordPress e pubblicate tramite shortcode.
 
-Versione corrente: `1.2.5`
+Versione corrente: `1.2.10`
 
 Stack:
 

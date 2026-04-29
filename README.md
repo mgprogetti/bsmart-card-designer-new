@@ -2,7 +2,7 @@
 
 WordPress plugin per creare, modificare e pubblicare card prodotto tramite un'interfaccia React dentro l'admin WordPress.
 
-Versione corrente: `1.2.5`
+Versione corrente: `1.2.10`
 
 ## Cosa Fa
 
@@ -27,7 +27,7 @@ La variante `Promo` include:
 ## Installazione WordPress
 
 1. Usa lo ZIP installabile più recente, per esempio:
-   `bsmart-card-designer-1.2.5.zip`
+   `bsmart-card-designer-1.2.10.zip`
 2. Vai in WordPress:
    `Plugin > Aggiungi nuovo > Carica plugin`
 3. Carica lo ZIP e attiva il plugin.

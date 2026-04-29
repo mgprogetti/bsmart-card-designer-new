@@ -132,10 +132,12 @@ const CardDashboard: React.FC<Props> = ({ cards, onCreateNew, onEdit, onDelete }
                                                     ${card.data.cardVariant === 'book' ? 'bg-indigo-50 text-indigo-700 border-indigo-200' : ''}
                                                     ${card.data.cardVariant === 'product' ? 'bg-green-50 text-green-700 border-green-200' : ''}
                                                     ${card.data.cardVariant === 'simple' ? 'bg-amber-50 text-amber-700 border-amber-200' : ''}
+                                                    ${card.data.cardVariant === 'promo' ? 'bg-[#FFF4F0] text-[#B94A2F] border-[#FFD8CC]' : ''}
                                                 `}>
                                                     {card.data.cardVariant === 'comic' ? 'Fumetto' : 
                                                      card.data.cardVariant === 'book' ? 'Libro' : 
-                                                     card.data.cardVariant === 'product' ? 'Didattica' : 'Semplice'}
+                                                     card.data.cardVariant === 'product' ? 'Didattica' :
+                                                     card.data.cardVariant === 'promo' ? 'Promo' : 'Semplice'}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4">

@@ -179,6 +179,56 @@ export const generateWordPressCode = (data: ProductData): { html: string; css: s
   margin-bottom: 1.5rem;
 }
 
+/* --- Rich Text Content Styles --- */
+.wp-comic-card .wp-description-content p,
+.wp-book-card .wp-description-content p,
+.wp-edu-card .wp-description-content p,
+.wp-simple-card .wp-description-content p {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+  margin-block-start: 0 !important;
+  margin-block-end: 0 !important;
+}
+
+.wp-comic-card .wp-description-content p:has(> br:only-child),
+.wp-book-card .wp-description-content p:has(> br:only-child),
+.wp-edu-card .wp-description-content p:has(> br:only-child),
+.wp-simple-card .wp-description-content p:has(> br:only-child) {
+  height: 1.6em;
+  line-height: 1.6;
+}
+
+.wp-comic-card .wp-description-content p:has(> br:only-child) br,
+.wp-book-card .wp-description-content p:has(> br:only-child) br,
+.wp-edu-card .wp-description-content p:has(> br:only-child) br,
+.wp-simple-card .wp-description-content p:has(> br:only-child) br {
+  display: none;
+}
+
+.wp-comic-card .wp-description-content ul,
+.wp-comic-card .wp-description-content ol,
+.wp-book-card .wp-description-content ul,
+.wp-book-card .wp-description-content ol,
+.wp-edu-card .wp-description-content ul,
+.wp-edu-card .wp-description-content ol,
+.wp-simple-card .wp-description-content ul,
+.wp-simple-card .wp-description-content ol {
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.wp-description-content ul {
+  list-style-type: disc;
+}
+
+.wp-description-content ol {
+  list-style-type: decimal;
+}
+
+.wp-description-content li {
+  margin-bottom: 0.3rem;
+}
+
 /* --- Elementi Specifici FUMETTO --- */
 .wp-comic-card__subject-badge {
   display: inline-block;

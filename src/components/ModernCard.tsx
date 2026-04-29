@@ -7,6 +7,7 @@ interface Props {
 }
 
 const formatPrice = (value: number): string => value.toFixed(2).replace('.', ',');
+const hasPrice = (value: number | undefined | null): value is number => value !== undefined && value !== null;
 
 const ModernCard: React.FC<Props> = ({ data }) => {
     const primaryUrl = data.links[0]?.url || '#';
@@ -20,8 +21,11 @@ const ModernCard: React.FC<Props> = ({ data }) => {
     const isComic = data.cardVariant === 'comic';
     const isPromo = data.cardVariant === 'promo';
 
-    const savings = isPromo && data.originalPrice && data.promoPrice
-        ? formatPrice(data.originalPrice - data.promoPrice)
+    const originalPrice = data.originalPrice;
+    const promoPrice = data.promoPrice;
+    const hasPromoPrices = isPromo && hasPrice(originalPrice) && hasPrice(promoPrice);
+    const savings = hasPromoPrices
+        ? formatPrice(originalPrice - promoPrice)
         : null;
 
     // Filter links: Book, Product, Simple and Promo show only primary (usually)
@@ -154,15 +158,15 @@ const ModernCard: React.FC<Props> = ({ data }) => {
                 )}
 
                 {/* Promo Pricing Section */}
-                {isPromo && data.originalPrice && data.promoPrice && (
+                {hasPromoPrices && (
                     <div className="flex flex-wrap items-baseline gap-4 mb-6">
                         {/* Prezzo originale: piccolo, barrato, grigio */}
                         <span className="text-sm text-slate-400 line-through">
-                            € {formatPrice(data.originalPrice)}
+                            € {formatPrice(originalPrice)}
                         </span>
                         {/* Prezzo promo: grande, in evidenza */}
                         <span className="text-2xl font-black text-slate-900">
-                            € {formatPrice(data.promoPrice)}
+                            € {formatPrice(promoPrice)}
                         </span>
                         {/* Risparmi */}
                         {savings && (

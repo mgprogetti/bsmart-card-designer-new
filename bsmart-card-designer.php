@@ -2,7 +2,7 @@
 /**
  * Plugin Name: bSmart Card Designer
  * Description: Un plugin per creare e gestire card prodotto responsive (Fumetto, Libro, Didattica, ecc.) da inserire negli articoli tramite shortcode.
- * Version: 1.2.5
+ * Version: 1.2.10
  * Author: bSmart Labs
  * Text Domain: bsmart-card-designer
  */
@@ -113,7 +113,7 @@ class BSmart_Card_Designer {
             'bsmart-card-designer-css',
             $dist_url . 'index.css',
             array(),
-            '1.2.5'
+            '1.2.10'
         );
 
         // Carica il JS compilato da Vite
@@ -121,7 +121,7 @@ class BSmart_Card_Designer {
             'bsmart-card-designer-js',
             $dist_url . 'index.js',
             array('wp-element'), // Dipendenze
-            '1.2.5',
+            '1.2.10',
             true // Footer
         );
 
@@ -253,7 +253,7 @@ class BSmart_Card_Designer {
             'bsmart-card-frontend-style',
             plugin_dir_url(__FILE__) . 'bsmart-style.css',
             array(),
-            '1.2.5'
+            '1.2.10'
         );
 
         return $html;
