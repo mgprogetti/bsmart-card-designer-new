@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-**bSmart Card Designer** is a WordPress plugin that provides a React-based admin interface for creating, editing, and managing product cards (card designer). The plugin supports multiple card variants (comic, book, product, simple) with rich text editing capabilities.
+**bSmart Card Designer** is a WordPress plugin that provides a React-based admin interface for creating, editing, and managing product cards (card designer). The plugin supports multiple card variants (comic, book, product, simple, promo) with rich text editing capabilities and promotional pricing features.
 
 The project consists of:
 - **Frontend**: React + TypeScript application built with Vite
@@ -84,8 +84,12 @@ The core data structure for a card. Fields include:
 - Basic: `title`, `cardTitle`, `description`, `coverImage`
 - Links: `links` array with url/label/type (primary/secondary)
 - Metadata: `subject`, `publisher`, `tags`
-- Variant-specific: `author`/`whyRead` (book), `brand` (product)
-- `cardVariant`: One of 'comic' | 'book' | 'product' | 'simple'
+- Variant-specific: 
+  - `author`/`whyRead` (book)
+  - `brand` (product/simple)
+  - `originalPrice`/`promoPrice`/`discountBadge`/`ctaText` (promo)
+  - `educationalObjectives` (product)
+- `cardVariant`: One of 'comic' | 'book' | 'product' | 'simple' | 'promo'
 
 ### SavedCard
 Wrapper for persisted data:
@@ -153,10 +157,64 @@ import { ProductData } from '@/types';  // instead of '../../../types'
 - **lucide-react**: Icon library (if used in components)
 - **eslint**: Code linting (configured but no explicit .eslintrc file found)
 
+## Recent Feature: Promo Card Variant (v1.2.0 - Apr 29, 2026)
+
+### What was added
+A new 5th card variant called **"Promo"** designed for promotional product cards with dynamic pricing:
+
+**New Fields in ProductData:**
+```typescript
+originalPrice?: number;      // Original price (strikethrough)
+promoPrice?: number;         // Promotional price (emphasized)
+discountBadge?: string;      // Text like "30%" displayed on circular badge
+ctaText?: string;            // Custom CTA button text (e.g., "Acquista ora")
+```
+
+### Implementation Details
+
+**Files Modified:**
+1. **src/types.ts** - Added 'promo' to CardVariant, new price fields to ProductData
+2. **src/components/CardEditor.tsx** - Added promo variant selector button (Tag icon, red when active), form fields for prices with inline validation
+3. **src/components/ModernCard.tsx** - Badge rendering on image, pricing display section, custom CTA text support
+
+**Key Features:**
+- **Price Validation**: Form blocks save if `promoPrice >= originalPrice`
+- **Discount Badge**: Circular red badge (#B92A09) positioned top-right on image (48x48px)
+- **Savings Display**: Auto-calculated savings shown in green pill
+- **CTA Customization**: Button text customizable per card (defaults to link.label)
+- **Square Images**: Promo cards use square aspect ratio (same as product/simple)
+
+**Frontend Display (ModernCard):**
+- Original price: small, strikethrough, gray
+- Promo price: large, bold, dark
+- Savings: green background pill with savings amount
+- Badge: circular red overlay on image
+- CTA: button with custom text
+
+### How to Extend Promo Further
+
+**Add more pricing fields:**
+1. Add field to ProductData interface (src/types.ts)
+2. Add form input in CardEditor.tsx conditional block (`{variant === 'promo' && (...)`)
+3. Add display logic in ModernCard.tsx (check `isPromo` flag)
+
+**Change badge color/style:**
+- Badge styling in ModernCard.tsx line ~52: `backgroundColor: '#B92A09'` and dimensions `w-12 h-12`
+
+**Modify pricing display format:**
+- Pricing section in ModernCard.tsx line ~115-128
+
+### Version History
+- v1.2.0: Added Promo variant with pricing and discount badges
+- v1.1.0: Rich text editing for descriptions
+- v1.0.0: Initial release with comic, book, product, simple variants
+
 ## Git Workflow
 
 Recent commits show feature-based development:
-- `feat: Implement rich text editing...` (latest)
-- `First version`
+- `chore: Bump version to 1.2.0 for Promo card feature release` (v1.2.0)
+- `feat: Implement Promo card variant with pricing and discount badge` (v1.2.0)
+- `feat: Implement rich text editing...` (v1.1.0)
+- `First version` (v1.0.0)
 
-Follow conventional commit format for clarity.
+Follow conventional commit format for clarity. Use version tags for releases (e.g., `v1.2.0`).

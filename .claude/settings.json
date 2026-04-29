@@ -1,0 +1,22 @@
+{
+    "autocompact_percentage_override": 75,
+    "skills_exclude": [
+        "seo*",
+        "baoyu*",
+        "gsd-*",
+        "price-psychology*",
+        "social-proof*",
+        "skin-health*",
+        "headline-psychologist",
+        "sequence-psychologist",
+        "ux-persuasion*"
+    ],
+    "permissions": {
+    "deny": [
+        "Read(node_modules/**)",
+        "Read(dist/**)",
+        "Read(build/**)",
+        "Read(Coverage/**)"
+    ]
+    }
+}
