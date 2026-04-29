@@ -11,6 +11,8 @@ interface Props {
     onCancel: () => void;
 }
 
+const formatPrice = (value: number): string => value.toFixed(2).replace('.', ',');
+
 const EMPTY_DATA: ProductData = {
     title: "", // Internal WP Title
     cardTitle: "", // Display Title
@@ -24,7 +26,10 @@ const EMPTY_DATA: ProductData = {
     author: "",
     whyRead: "",
     brand: "",
+    brandUrl: "",
     educationalObjectives: [],
+    promoTopics: [],
+    schoolLevels: [],
     tags: [],
     links: []
 };
@@ -42,6 +47,8 @@ const CardEditor: React.FC<Props> = ({ initialData, onSave, onCancel }) => {
     // Helper states for array/complex inputs
     const [rawTags, setRawTags] = useState(initialData?.tags?.join(', ') || "");
     const [rawObjectives, setRawObjectives] = useState(initialData?.educationalObjectives?.join(', ') || "");
+    const [rawPromoTopics, setRawPromoTopics] = useState(initialData?.promoTopics?.join(', ') || "");
+    const [rawSchoolLevels, setRawSchoolLevels] = useState(initialData?.schoolLevels?.join(', ') || "");
     const [buyLink, setBuyLink] = useState(initialData?.links?.find(l => l.type === 'primary')?.url || "");
     const [previewLink, setPreviewLink] = useState(initialData?.links?.find(l => l.type === 'secondary')?.url || "");
 
@@ -68,15 +75,19 @@ const CardEditor: React.FC<Props> = ({ initialData, onSave, onCancel }) => {
 
         const newTags = rawTags.split(',').map(t => t.trim()).filter(t => t !== "");
         const newObjectives = rawObjectives.split(',').map(t => t.trim()).filter(t => t !== "");
+        const newPromoTopics = rawPromoTopics.split(',').map(t => t.trim()).filter(t => t !== "");
+        const newSchoolLevels = rawSchoolLevels.split(',').map(t => t.trim()).filter(t => t !== "");
 
         setFormData(prev => ({
             ...prev,
             title: internalTitle, // Sync internal title
             links: newLinks,
             tags: newTags,
-            educationalObjectives: newObjectives
+            educationalObjectives: newObjectives,
+            promoTopics: newPromoTopics,
+            schoolLevels: newSchoolLevels
         }));
-    }, [buyLink, previewLink, rawTags, rawObjectives, internalTitle, variant]);
+    }, [buyLink, previewLink, rawTags, rawObjectives, rawPromoTopics, rawSchoolLevels, internalTitle, variant]);
 
 
     const handleSubmit = () => {
@@ -198,33 +209,31 @@ const CardEditor: React.FC<Props> = ({ initialData, onSave, onCancel }) => {
                             </div>
                         )}
 
-                        {/* Brand */}
-                        {(variant === 'product' && (
-                            <div>
-                                <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Marca / Produttore</label>
-                                <input
-                                    type="text"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                                    placeholder="Es. Learning Resources"
-                                    value={formData.brand || ''}
-                                    onChange={(e) => handleChange('brand', e.target.value)}
-                                />
+                        {/* Producer */}
+                        {(variant === 'product' || variant === 'simple' || variant === 'promo') && (
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Nome partner</label>
+                                    <input
+                                        type="text"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                                        placeholder="Es. bSmart"
+                                        value={formData.brand || ''}
+                                        onChange={(e) => handleChange('brand', e.target.value)}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Link partner</label>
+                                    <input
+                                        type="url"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-sm font-mono"
+                                        placeholder="https://..."
+                                        value={formData.brandUrl || ''}
+                                        onChange={(e) => handleChange('brandUrl', e.target.value)}
+                                    />
+                                </div>
                             </div>
-                        ))}
-
-                        {/* Simple Product Brand */}
-                        {(variant === 'simple' && (
-                            <div>
-                                <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Marca / Produttore</label>
-                                <input
-                                    type="text"
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
-                                    placeholder="Es. Seven"
-                                    value={formData.brand || ''}
-                                    onChange={(e) => handleChange('brand', e.target.value)}
-                                />
-                            </div>
-                        ))}
+                        )}
 
                         {/* Publisher (Not for simple/product) */}
                         {(variant === 'comic' || variant === 'book') && (
@@ -309,6 +318,28 @@ const CardEditor: React.FC<Props> = ({ initialData, onSave, onCancel }) => {
                         {/* Promo Fields */}
                         {variant === 'promo' && (
                             <>
+                                <div>
+                                    <label className="block text-xs font-semibold text-[#B94A2F] uppercase mb-1">Argomenti</label>
+                                    <input
+                                        type="text"
+                                        className="w-full px-3 py-2 border border-[#FFD8CC] bg-[#FFF4F0] rounded-lg outline-none focus:ring-2 focus:ring-[#FF6643]"
+                                        value={rawPromoTopics}
+                                        onChange={e => setRawPromoTopics(e.target.value)}
+                                        placeholder="Es. Lettura, Comprensione, Narrativa"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-xs font-semibold text-[#A94438] uppercase mb-1">Livello scolastico</label>
+                                    <input
+                                        type="text"
+                                        className="w-full px-3 py-2 border border-[#FFCFC4] bg-[#FFF0ED] rounded-lg outline-none focus:ring-2 focus:ring-[#FF6643]"
+                                        value={rawSchoolLevels}
+                                        onChange={e => setRawSchoolLevels(e.target.value)}
+                                        placeholder="Es. Primaria, Secondaria I grado"
+                                    />
+                                </div>
+
                                 {/* Prezzo originale */}
                                 <div>
                                     <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Prezzo originale (€)</label>
@@ -347,8 +378,8 @@ const CardEditor: React.FC<Props> = ({ initialData, onSave, onCancel }) => {
                                 {/* Risparmio calcolato (sola lettura) */}
                                 {formData.originalPrice && formData.promoPrice &&
                                 formData.promoPrice < formData.originalPrice && (
-                                    <p className="text-sm text-green-700 font-semibold">
-                                        Risparmi € {(formData.originalPrice - formData.promoPrice).toFixed(2)}
+                                    <p className="inline-flex rounded px-2 py-0.5 text-sm text-[#C73E23] font-semibold bg-gradient-to-r from-[#FFF2ED] to-[#FFE0D6]">
+                                        Risparmi € {formatPrice(formData.originalPrice - formData.promoPrice)}
                                     </p>
                                 )}
 

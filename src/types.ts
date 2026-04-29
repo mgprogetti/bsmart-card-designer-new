@@ -28,6 +28,7 @@ export interface ProductData {
 
   // Fields for Product / Simple variant
   brand?: string;
+  brandUrl?: string;
   educationalObjectives?: string[];
 
   // Fields for Promo variant
@@ -35,6 +36,8 @@ export interface ProductData {
   promoPrice?: number;
   discountBadge?: string;
   ctaText?: string;
+  promoTopics?: string[];
+  schoolLevels?: string[];
 
   cardVariant?: CardVariant;
 }

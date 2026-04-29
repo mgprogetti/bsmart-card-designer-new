@@ -86,7 +86,9 @@
   display: block;
   width: 100%;
   max-width: 160px;
+  max-height: 220px;
   height: auto;
+  object-fit: contain;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15);
   border-radius: 4px;
   margin: 0 auto;
@@ -310,6 +312,57 @@
   font-size: 0.8rem;
   padding: 0.2rem 0.6rem;
   border-radius: 4px;
+}
+
+/* --- Elementi Specifici PROMO --- */
+.wp-promo-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.wp-promo-card__meta-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.wp-promo-card__meta-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.wp-promo-card__topic-label,
+.wp-promo-card__topic-tag {
+  color: #b94a2f;
+}
+
+.wp-promo-card__topic-tag {
+  background-color: #fff4f0;
+  border: 1px solid #ffd8cc;
+}
+
+.wp-promo-card__level-label,
+.wp-promo-card__level-tag {
+  color: #a94438;
+}
+
+.wp-promo-card__level-tag {
+  background-color: #fff0ed;
+  border: 1px solid #ffcfc4;
+}
+
+.wp-promo-card__topic-tag,
+.wp-promo-card__level-tag {
+  font-size: 0.8rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-weight: 500;
 }
 
 /* --- Bottoni / Azioni --- */

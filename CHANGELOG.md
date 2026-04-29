@@ -1,5 +1,38 @@
 # Changelog - bSmart Card Designer
 
+## [1.2.5] - 2026-04-29
+
+### Added
+- Added Promo-only `Argomenti` and `Livello scolastico` tag fields.
+- Displayed the new Promo tags between the description and pricing section with soft palettes based on `#FF6643`.
+
+## [1.2.4] - 2026-04-29
+
+### Changed
+- Renamed the producer-facing labels to partner-facing labels in the card and editor.
+
+## [1.2.3] - 2026-04-29
+
+### Changed
+- Released a new installable package with the editor version label aligned to the plugin version.
+
+## [1.2.2] - 2026-04-29
+
+### Added
+- Added `Nome produttore` and `Link produttore` fields for product, simple, and promo cards.
+- Made producer names clickable when a producer URL is provided.
+
+### Fixed
+- Removed the incorrect `Editore:` label from promo cards.
+
+## [1.2.1] - 2026-04-29
+
+### Fixed
+- Prevented card cover images from being cropped by using contained image rendering.
+- Updated promotional price display to use comma decimals.
+- Updated Promo discount badge color to `#FF6643`.
+- Applied a lighter `#FF6643`-based gradient to the savings badge.
+
 ## [1.2.0] - 2026-04-29
 
 ### Added

@@ -5,12 +5,13 @@ export const generateWordPressCode = (data: ProductData): { html: string; css: s
   const isBook = data.cardVariant === 'book';
   const isProduct = data.cardVariant === 'product';
   const isSimple = data.cardVariant === 'simple';
-  const isComic = (!isBook && !isProduct && !isSimple) || data.cardVariant === 'comic';
+  const isPromo = data.cardVariant === 'promo';
+  const isComic = (!isBook && !isProduct && !isSimple && !isPromo) || data.cardVariant === 'comic';
 
   let rootClass = 'wp-comic-card';
   if (isBook) rootClass = 'wp-book-card';
   if (isProduct) rootClass = 'wp-edu-card';
-  if (isSimple) rootClass = 'wp-simple-card';
+  if (isSimple || isPromo) rootClass = 'wp-simple-card';
 
   const css = `
 /* 
@@ -101,7 +102,9 @@ export const generateWordPressCode = (data: ProductData): { html: string; css: s
   display: block;
   width: 100%;
   max-width: 160px;
+  max-height: 220px;
   height: auto;
+  object-fit: contain;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.15);
   border-radius: 4px;
   margin: 0 auto;
@@ -285,6 +288,57 @@ export const generateWordPressCode = (data: ProductData): { html: string; css: s
   border-radius: 4px;
 }
 
+/* --- Elementi Specifici PROMO --- */
+.wp-promo-card__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.wp-promo-card__meta-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+}
+
+.wp-promo-card__meta-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.wp-promo-card__topic-label,
+.wp-promo-card__topic-tag {
+  color: #b94a2f;
+}
+
+.wp-promo-card__topic-tag {
+  background-color: #fff4f0;
+  border: 1px solid #ffd8cc;
+}
+
+.wp-promo-card__level-label,
+.wp-promo-card__level-tag {
+  color: #a94438;
+}
+
+.wp-promo-card__level-tag {
+  background-color: #fff0ed;
+  border: 1px solid #ffcfc4;
+}
+
+.wp-promo-card__topic-tag,
+.wp-promo-card__level-tag {
+  font-size: 0.8rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
 /* --- Bottoni / Azioni --- */
 .wp-card-actions {
   margin-top: auto;
@@ -335,13 +389,16 @@ export const generateWordPressCode = (data: ProductData): { html: string; css: s
   const publisherHtml = data.publisherUrl
     ? `<a href="${data.publisherUrl}" target="_blank" rel="noopener">${data.publisher}</a>`
     : data.publisher;
+  const producerHtml = data.brandUrl
+    ? `<a href="${data.brandUrl}" target="_blank" rel="noopener">${data.brand}</a>`
+    : data.brand;
 
   const primaryUrl = data.links[0]?.url || '#';
   const titleHref = data.titleUrl || primaryUrl;
   const imageHref = data.imageClickUrl || primaryUrl;
 
-  // Per i libri, prodotti didattici e semplici mostriamo solo il link primario (Acquista)
-  const linksToRender = (isBook || isProduct || isSimple)
+  // Per i libri, prodotti didattici, semplici e promo mostriamo solo il link primario (Acquista)
+  const linksToRender = (isBook || isProduct || isSimple || isPromo)
     ? data.links.filter(l => l.type === 'primary')
     : data.links;
 
@@ -364,11 +421,32 @@ export const generateWordPressCode = (data: ProductData): { html: string; css: s
     </div>
   ` : '';
 
+  const promoMetaHtml = isPromo && ((data.promoTopics && data.promoTopics.length > 0) || (data.schoolLevels && data.schoolLevels.length > 0)) ? `
+    <div class="wp-promo-card__meta">
+      ${data.promoTopics && data.promoTopics.length > 0 ? `
+      <div class="wp-promo-card__meta-group">
+        <span class="wp-promo-card__meta-label wp-promo-card__topic-label">Argomenti</span>
+        <div class="wp-promo-card__meta-list">
+          ${data.promoTopics.map(topic => `<span class="wp-promo-card__topic-tag">${topic}</span>`).join('')}
+        </div>
+      </div>
+      ` : ''}
+      ${data.schoolLevels && data.schoolLevels.length > 0 ? `
+      <div class="wp-promo-card__meta-group">
+        <span class="wp-promo-card__meta-label wp-promo-card__level-label">Livello scolastico</span>
+        <div class="wp-promo-card__meta-list">
+          ${data.schoolLevels.map(level => `<span class="wp-promo-card__level-tag">${level}</span>`).join('')}
+        </div>
+      </div>
+      ` : ''}
+    </div>
+  ` : '';
+
   // Use cardTitle for display, not internal title
 
 
   const html = `
-<!-- WP Card: ${isBook ? 'Libro' : isProduct ? 'Prodotto Didattico' : isSimple ? 'Prodotto Semplice' : 'Fumetto'} - ${data.title} -->
+<!-- WP Card: ${isBook ? 'Libro' : isProduct ? 'Prodotto Didattico' : isSimple ? 'Prodotto Semplice' : isPromo ? 'Promo' : 'Fumetto'} - ${data.title} -->
 <div class="${rootClass}">
   <!-- Immagine -->
   <div class="${rootClass}__image-col">
@@ -386,9 +464,9 @@ export const generateWordPressCode = (data: ProductData): { html: string; css: s
     </h3>
 
     ${isBook && data.author ? `<div class="wp-book-card__author">${data.author}</div>` : ''}
-    ${(isProduct || isSimple) && data.brand ? `<div class="${rootClass}__brand">Produttore: ${data.brand}</div>` : ''}
+    ${(isProduct || isSimple || isPromo) && data.brand ? `<div class="${rootClass}__brand">Partner: ${producerHtml}</div>` : ''}
 
-    ${!isProduct && !isSimple ? `
+    ${(isComic || isBook) && data.publisher ? `
     <div class="${rootClass}__publisher">
         <strong>Editore:</strong> ${publisherHtml}
     </div>
@@ -408,6 +486,7 @@ export const generateWordPressCode = (data: ProductData): { html: string; css: s
 
     ${tagsListHtml}
     ${objectivesListHtml}
+    ${promoMetaHtml}
 
     <div class="wp-card-actions">
       ${linksToRender.map(link => `

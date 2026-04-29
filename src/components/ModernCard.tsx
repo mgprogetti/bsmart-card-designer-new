@@ -6,6 +6,8 @@ interface Props {
     data: ProductData;
 }
 
+const formatPrice = (value: number): string => value.toFixed(2).replace('.', ',');
+
 const ModernCard: React.FC<Props> = ({ data }) => {
     const primaryUrl = data.links[0]?.url || '#';
     const titleHref = data.titleUrl || primaryUrl;
@@ -19,7 +21,7 @@ const ModernCard: React.FC<Props> = ({ data }) => {
     const isPromo = data.cardVariant === 'promo';
 
     const savings = isPromo && data.originalPrice && data.promoPrice
-        ? (data.originalPrice - data.promoPrice).toFixed(2)
+        ? formatPrice(data.originalPrice - data.promoPrice)
         : null;
 
     // Filter links: Book, Product, Simple and Promo show only primary (usually)
@@ -27,7 +29,6 @@ const ModernCard: React.FC<Props> = ({ data }) => {
         ? data.links.filter(l => l.type === 'primary')
         : data.links;
 
-    // Product, Simple and Promo share image style (aspect-square)
     const isProductOrSimple = isProduct || isSimple || isPromo;
 
     return (
@@ -44,11 +45,11 @@ const ModernCard: React.FC<Props> = ({ data }) => {
                         <img
                             src={data.coverImage}
                             alt={data.cardTitle}
-                            className={`w-full max-w-[160px] h-auto shadow-lg rounded-sm object-cover ${isProductOrSimple ? 'aspect-square object-contain' : ''}`}
+                            className="w-full max-w-[160px] max-h-[220px] h-auto shadow-lg rounded-sm object-contain"
                         />
                         {isPromo && data.discountBadge && (
                             <div className="absolute top-2 right-2 w-12 h-12 rounded-full flex items-center justify-center text-white text-xs font-black shadow-lg"
-                                style={{ backgroundColor: '#B92A09' }}>
+                                style={{ backgroundColor: '#FF6643' }}>
                                 {data.discountBadge}
                             </div>
                         )}
@@ -85,12 +86,19 @@ const ModernCard: React.FC<Props> = ({ data }) => {
                 {/* Brand (PRODUCT & SIMPLE ONLY) */}
                 {isProductOrSimple && data.brand && (
                     <div className="text-sm text-slate-500 mb-4 uppercase tracking-wide font-semibold">
-                        <span className="text-slate-400">Produttore:</span> {data.brand}
+                        <span className="text-slate-400">Partner:</span>{' '}
+                        {data.brandUrl ? (
+                            <a href={data.brandUrl} target="_blank" rel="noopener" className="underline decoration-slate-300 hover:text-blue-600 hover:decoration-blue-600 underline-offset-2">
+                                {data.brand}
+                            </a>
+                        ) : (
+                            data.brand
+                        )}
                     </div>
                 )}
 
                 {/* Publisher (COMIC & BOOK ONLY) */}
-                {(!isProduct && !isSimple) && (
+                {(isComic || isBook) && data.publisher && (
                     <div className="text-sm text-slate-500 mb-4">
                         <strong className="text-slate-700">Editore:</strong>{' '}
                         {data.publisherUrl ? (
@@ -111,20 +119,54 @@ const ModernCard: React.FC<Props> = ({ data }) => {
                     />
                 </div>
 
+                {/* Promo Tags */}
+                {isPromo && ((data.promoTopics && data.promoTopics.length > 0) || (data.schoolLevels && data.schoolLevels.length > 0)) && (
+                    <div className="space-y-3 mb-6">
+                        {data.promoTopics && data.promoTopics.length > 0 && (
+                            <div>
+                                <span className="block text-xs font-bold text-[#B94A2F] uppercase mb-2 tracking-wider">
+                                    Argomenti
+                                </span>
+                                <div className="flex flex-wrap gap-2">
+                                    {data.promoTopics.map((topic, index) => (
+                                        <span key={index} className="bg-[#FFF4F0] text-[#B94A2F] border border-[#FFD8CC] text-xs px-2.5 py-1 rounded font-medium">
+                                            {topic}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                        {data.schoolLevels && data.schoolLevels.length > 0 && (
+                            <div>
+                                <span className="block text-xs font-bold text-[#A94438] uppercase mb-2 tracking-wider">
+                                    Livello scolastico
+                                </span>
+                                <div className="flex flex-wrap gap-2">
+                                    {data.schoolLevels.map((level, index) => (
+                                        <span key={index} className="bg-[#FFF0ED] text-[#A94438] border border-[#FFCFC4] text-xs px-2.5 py-1 rounded font-medium">
+                                            {level}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                )}
+
                 {/* Promo Pricing Section */}
                 {isPromo && data.originalPrice && data.promoPrice && (
                     <div className="flex flex-wrap items-baseline gap-4 mb-6">
                         {/* Prezzo originale: piccolo, barrato, grigio */}
                         <span className="text-sm text-slate-400 line-through">
-                            € {data.originalPrice.toFixed(2)}
+                            € {formatPrice(data.originalPrice)}
                         </span>
                         {/* Prezzo promo: grande, in evidenza */}
                         <span className="text-2xl font-black text-slate-900">
-                            € {data.promoPrice.toFixed(2)}
+                            € {formatPrice(data.promoPrice)}
                         </span>
                         {/* Risparmi */}
                         {savings && (
-                            <span className="text-sm font-semibold text-green-700 bg-green-50 px-2 py-0.5 rounded">
+                            <span className="text-sm font-semibold text-[#C73E23] bg-gradient-to-r from-[#FFF2ED] to-[#FFE0D6] px-2 py-0.5 rounded">
                                 Risparmi € {savings}
                             </span>
                         )}

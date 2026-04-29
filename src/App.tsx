@@ -66,7 +66,7 @@ const App: React.FC = () => {
                     <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">B</div>
                     <span className="font-semibold text-gray-700">bSmart Card Designer</span>
                 </div>
-                <div className="text-xs text-gray-400 font-mono">v1.1.0</div>
+                <div className="text-xs text-gray-400 font-mono">v1.2.5</div>
             </div>
 
             {loading && (
