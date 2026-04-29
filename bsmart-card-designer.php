@@ -2,7 +2,7 @@
 /**
  * Plugin Name: bSmart Card Designer
  * Description: Un plugin per creare e gestire card prodotto responsive (Fumetto, Libro, Didattica, ecc.) da inserire negli articoli tramite shortcode.
- * Version: 1.1.0
+ * Version: 1.2.0
  * Author: bSmart Labs
  * Text Domain: bsmart-card-designer
  */
