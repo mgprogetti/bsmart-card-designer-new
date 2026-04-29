@@ -16,14 +16,19 @@ const ModernCard: React.FC<Props> = ({ data }) => {
     const isProduct = data.cardVariant === 'product';
     const isSimple = data.cardVariant === 'simple';
     const isComic = data.cardVariant === 'comic';
+    const isPromo = data.cardVariant === 'promo';
 
-    // Filter links: Book, Product and Simple show only primary (usually)
-    const linksToShow = (isBook || isProduct || isSimple)
+    const savings = isPromo && data.originalPrice && data.promoPrice
+        ? (data.originalPrice - data.promoPrice).toFixed(2)
+        : null;
+
+    // Filter links: Book, Product, Simple and Promo show only primary (usually)
+    const linksToShow = (isBook || isProduct || isSimple || isPromo)
         ? data.links.filter(l => l.type === 'primary')
         : data.links;
 
-    // Product and Simple share image style (aspect-square)
-    const isProductOrSimple = isProduct || isSimple;
+    // Product, Simple and Promo share image style (aspect-square)
+    const isProductOrSimple = isProduct || isSimple || isPromo;
 
     return (
         <div className="flex flex-col md:flex-row bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden w-full max-w-4xl mx-auto hover:shadow-lg transition-shadow duration-300">
@@ -35,11 +40,19 @@ const ModernCard: React.FC<Props> = ({ data }) => {
                     rel="noopener"
                     className="block relative transition-transform duration-300 hover:scale-105 hover:-rotate-1"
                 >
-                    <img
-                        src={data.coverImage}
-                        alt={data.cardTitle}
-                        className={`w-full max-w-[160px] h-auto shadow-lg rounded-sm object-cover ${isProductOrSimple ? 'aspect-square object-contain' : ''}`}
-                    />
+                    <div className="relative">
+                        <img
+                            src={data.coverImage}
+                            alt={data.cardTitle}
+                            className={`w-full max-w-[160px] h-auto shadow-lg rounded-sm object-cover ${isProductOrSimple ? 'aspect-square object-contain' : ''}`}
+                        />
+                        {isPromo && data.discountBadge && (
+                            <div className="absolute top-2 right-2 w-12 h-12 rounded-full flex items-center justify-center text-white text-xs font-black shadow-lg"
+                                style={{ backgroundColor: '#B92A09' }}>
+                                {data.discountBadge}
+                            </div>
+                        )}
+                    </div>
                 </a>
             </div>
 
@@ -98,6 +111,26 @@ const ModernCard: React.FC<Props> = ({ data }) => {
                     />
                 </div>
 
+                {/* Promo Pricing Section */}
+                {isPromo && data.originalPrice && data.promoPrice && (
+                    <div className="flex flex-wrap items-baseline gap-4 mb-6">
+                        {/* Prezzo originale: piccolo, barrato, grigio */}
+                        <span className="text-sm text-slate-400 line-through">
+                            € {data.originalPrice.toFixed(2)}
+                        </span>
+                        {/* Prezzo promo: grande, in evidenza */}
+                        <span className="text-2xl font-black text-slate-900">
+                            € {data.promoPrice.toFixed(2)}
+                        </span>
+                        {/* Risparmi */}
+                        {savings && (
+                            <span className="text-sm font-semibold text-green-700 bg-green-50 px-2 py-0.5 rounded">
+                                Risparmi € {savings}
+                            </span>
+                        )}
+                    </div>
+                )}
+
                 {/* Why Read (BOOK ONLY) */}
                 {isBook && data.whyRead && (
                     <div className="mb-6 bg-blue-50/50 border-l-4 border-blue-500 p-4 rounded-r-md">
@@ -144,21 +177,24 @@ const ModernCard: React.FC<Props> = ({ data }) => {
 
                 {/* Actions */}
                 <div className="mt-auto flex flex-wrap gap-3">
-                    {linksToShow.map((link, index) => (
-                        <a
-                            key={index}
-                            href={link.url}
-                            target="_blank"
-                            rel="noopener"
-                            className={`flex items-center gap-2 px-5 py-2.5 rounded-md font-semibold text-sm transition-all duration-200 no-underline ${link.type === 'primary'
-                                    ? 'bg-blue-600 text-white hover:bg-blue-700'
-                                    : 'bg-transparent text-slate-700 border border-slate-300 hover:bg-slate-50 hover:text-slate-900'
-                                }`}
-                        >
-                            {link.type === 'primary' ? <ShoppingBag size={16} /> : <BookOpen size={16} />}
-                            {link.label}
-                        </a>
-                    ))}
+                    {linksToShow.map((link, index) => {
+                        const buttonLabel = isPromo && data.ctaText && link.type === 'primary' ? data.ctaText : link.label;
+                        return (
+                            <a
+                                key={index}
+                                href={link.url}
+                                target="_blank"
+                                rel="noopener"
+                                className={`flex items-center gap-2 px-5 py-2.5 rounded-md font-semibold text-sm transition-all duration-200 no-underline ${link.type === 'primary'
+                                        ? 'bg-blue-600 text-white hover:bg-blue-700'
+                                        : 'bg-transparent text-slate-700 border border-slate-300 hover:bg-slate-50 hover:text-slate-900'
+                                    }`}
+                            >
+                                {link.type === 'primary' ? <ShoppingBag size={16} /> : <BookOpen size={16} />}
+                                {buttonLabel}
+                            </a>
+                        );
+                    })}
                 </div>
             </div>
         </div>

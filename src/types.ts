@@ -4,7 +4,7 @@ export interface ProductLink {
   type: 'primary' | 'secondary';
 }
 
-export type CardVariant = 'comic' | 'book' | 'product' | 'simple';
+export type CardVariant = 'comic' | 'book' | 'product' | 'simple' | 'promo';
 
 export interface ProductData {
   id?: number | string; // WP ID (number) or Local ID (string)
@@ -29,6 +29,12 @@ export interface ProductData {
   // Fields for Product / Simple variant
   brand?: string;
   educationalObjectives?: string[];
+
+  // Fields for Promo variant
+  originalPrice?: number;
+  promoPrice?: number;
+  discountBadge?: string;
+  ctaText?: string;
 
   cardVariant?: CardVariant;
 }

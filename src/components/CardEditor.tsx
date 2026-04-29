@@ -3,7 +3,7 @@ import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { ProductData, CardVariant, ProductLink } from '../types';
 import ModernCard from './ModernCard';
-import { ArrowLeft, Save, MessageSquare, Book, Package, ShoppingBag, Eye } from 'lucide-react';
+import { ArrowLeft, Save, MessageSquare, Book, Package, ShoppingBag, Eye, Tag } from 'lucide-react';
 
 interface Props {
     initialData?: ProductData | null;
@@ -88,6 +88,13 @@ const CardEditor: React.FC<Props> = ({ initialData, onSave, onCancel }) => {
             alert("Inserisci il 'Titolo Card' nel form che sarà visibile nell'anteprima.");
             return;
         }
+        if (variant === 'promo') {
+            const { originalPrice, promoPrice } = formData;
+            if (originalPrice == null || promoPrice == null || promoPrice >= originalPrice) {
+                alert('Il prezzo promo deve essere inferiore al prezzo originale.');
+                return;
+            }
+        }
         onSave(formData);
     };
 
@@ -117,6 +124,7 @@ const CardEditor: React.FC<Props> = ({ initialData, onSave, onCancel }) => {
                         <button onClick={() => setVariant('book')} title="Libro" className={`flex items-center gap-2 px-3 py-1.5 text-sm font-bold rounded transition-all ${variant === 'book' ? 'bg-white shadow text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}><Book size={16} /> <span className="hidden xl:inline">Libro</span></button>
                         <button onClick={() => setVariant('product')} title="Didattica" className={`flex items-center gap-2 px-3 py-1.5 text-sm font-bold rounded transition-all ${variant === 'product' ? 'bg-white shadow text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}><Package size={16} /> <span className="hidden xl:inline">Didattica</span></button>
                         <button onClick={() => setVariant('simple')} title="Semplice" className={`flex items-center gap-2 px-3 py-1.5 text-sm font-bold rounded transition-all ${variant === 'simple' ? 'bg-white shadow text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}><ShoppingBag size={16} /> <span className="hidden xl:inline">Semplice</span></button>
+                        <button onClick={() => setVariant('promo')} title="Promo" className={`flex items-center gap-2 px-3 py-1.5 text-sm font-bold rounded transition-all ${variant === 'promo' ? 'bg-white shadow text-red-600' : 'text-gray-500 hover:text-gray-700'}`}><Tag size={16} /> <span className="hidden xl:inline">Promo</span></button>
                     </div>
 
                     <button
@@ -297,6 +305,78 @@ const CardEditor: React.FC<Props> = ({ initialData, onSave, onCancel }) => {
                                 />
                             </div>
                         </div>
+
+                        {/* Promo Fields */}
+                        {variant === 'promo' && (
+                            <>
+                                {/* Prezzo originale */}
+                                <div>
+                                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Prezzo originale (€)</label>
+                                    <input
+                                        type="number"
+                                        min="0"
+                                        step="0.01"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                                        placeholder="Es. 19.99"
+                                        value={formData.originalPrice ?? ''}
+                                        onChange={(e) => handleChange('originalPrice', parseFloat(e.target.value) || 0)}
+                                    />
+                                </div>
+
+                                {/* Prezzo promo */}
+                                <div>
+                                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Prezzo promo (€)</label>
+                                    <input
+                                        type="number"
+                                        min="0"
+                                        step="0.01"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                                        placeholder="Es. 13.99"
+                                        value={formData.promoPrice ?? ''}
+                                        onChange={(e) => handleChange('promoPrice', parseFloat(e.target.value) || 0)}
+                                    />
+                                    {/* Validazione inline: mostra avviso se promoPrice >= originalPrice */}
+                                    {formData.promoPrice != null && formData.originalPrice != null &&
+                                    formData.promoPrice >= formData.originalPrice && (
+                                        <p className="text-red-600 text-xs mt-1">
+                                            Il prezzo promo deve essere inferiore al prezzo originale.
+                                        </p>
+                                    )}
+                                </div>
+
+                                {/* Risparmio calcolato (sola lettura) */}
+                                {formData.originalPrice && formData.promoPrice &&
+                                formData.promoPrice < formData.originalPrice && (
+                                    <p className="text-sm text-green-700 font-semibold">
+                                        Risparmi € {(formData.originalPrice - formData.promoPrice).toFixed(2)}
+                                    </p>
+                                )}
+
+                                {/* Badge percentuale di sconto */}
+                                <div>
+                                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Percentuale di sconto (es. "30%")</label>
+                                    <input
+                                        type="text"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                                        placeholder="Es. 30%"
+                                        value={formData.discountBadge || ''}
+                                        onChange={(e) => handleChange('discountBadge', e.target.value)}
+                                    />
+                                </div>
+
+                                {/* Testo CTA */}
+                                <div>
+                                    <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Testo pulsante acquisto</label>
+                                    <input
+                                        type="text"
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none"
+                                        placeholder="Es. Acquista ora"
+                                        value={formData.ctaText || ''}
+                                        onChange={(e) => handleChange('ctaText', e.target.value)}
+                                    />
+                                </div>
+                            </>
+                        )}
 
                         {/* Why Read (Book) */}
                         {variant === 'book' && (
